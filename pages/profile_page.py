@@ -3,7 +3,7 @@
 
 from pages.main_page import MainPage
 from pages.elements import WebElement, ManyWebElements
-from data import valid_email_1, valid_password_1
+from data import valid_email_1, valid_password
 
 
 class ProfilePage(MainPage):
@@ -11,7 +11,7 @@ class ProfilePage(MainPage):
     def __init__(self, web_driver):
         super().__init__(web_driver)
         self.click_enter_button()
-        self.login_with_email(valid_email_1, valid_password_1)
+        self.login_with_email(valid_email_1, valid_password)
         self.nickname_button().click()
 
     def edit_profile(self, new_name='', gender='', birthyear='', email='', new_password='', confirm_password='', about_me=''):

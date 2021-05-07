@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- encoding=utf8 -*-
+import time
 
 from pages.main_page import MainPage
 from pages.elements import WebElement, ManyWebElements
@@ -48,7 +49,7 @@ class SearchPage(MainPage):
 
         if other:
             all_features = ManyWebElements(self._web_driver,
-                                          xpath='//form[@id="form_match"]/div/ul/li/label/a')
+                                          xpath='//form[@id="form_match"]/div/ul/li/label')
             for feature in other:
 
                 if feature not in all_features.get_text():
@@ -58,5 +59,6 @@ class SearchPage(MainPage):
                 idx = all_features.get_text().index(feature)
                 all_features[idx].click()
 
-        show_button = WebElement(self._web_driver, xpath='//a[@class="show-models"]')
+        time.sleep(1)
+        show_button = WebElement(self._web_driver, timeout=20, xpath='//a[@class="show-models"]')
         show_button.click()

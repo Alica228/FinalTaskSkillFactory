@@ -15,7 +15,6 @@ class WebElement(object):
     _web_driver = None
     _page = None
     _timeout = 10
-    _wait_after_click = False  # TODO: how we can wait after click?
 
     def __init__(self, web_driver, timeout=10, wait_after_click=False, **kwargs):
         self._web_driver = web_driver
