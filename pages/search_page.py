@@ -27,6 +27,7 @@ class SearchPage(MainPage):
         all_categories_2[idx].click()
 
     def filter_products(self, name='', price_min='', price_max='', manufacturer=[], other=[]):
+        """ Filter products by filters. """
 
         if name:
             search_field = WebElement(self._web_driver,
@@ -69,3 +70,8 @@ class SearchPage(MainPage):
         time.sleep(1)
         show_button = WebElement(self._web_driver, timeout=20, xpath='//a[@class="show-models"]')
         show_button.click()
+
+    def mark_product(self, locator):
+        """ Mark a product. TODO """
+        all_products = ManyWebElements(self._web_driver,
+                                       xpath='//tr[@valign="top"]')
