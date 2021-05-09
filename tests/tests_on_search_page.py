@@ -10,20 +10,20 @@ from data import filters
     (("Гаджеты", "Мобильные"), "Мобильные телефоны "),
     (("Компьютеры", "Ноутбуки"), "Ноутбуки "),
     (("Фото", "Фотоаппараты"), "Фотоаппараты "),
-    (("TV", "Телевизоры"), "Телевизоры "),
+    ((" TV ", "Телевизоры"), "Телевизоры "),
     (("Аудио", "Наушники"), "Наушники "),
-    (("Бытовая техника", "Встраиваемая техника"), "Встраиваемая техника "),
+    (("Бытовая техника", "Встраиваемая техника"), "Встраиваемая техника"),
     (("Климат", "Кондиционеры"), "Кондиционеры "),
-    (("Дом", "Сантехника"), "Сантехника "),
+    (("Дом", "Сантехника"), "Сантехника"),
     (("Детские товары", "Коляски"), "Коляски "),
 ])
 def test_access_to_search_page(web_browser, my_input, expected_title):
     """ Test search page is accessable. """
     page = SearchPage(web_browser, *my_input)
-    title = WebElement(web_browser,
-                       xpath='//div[@class="page-title"]/div')
+    title = WebElement(web_browser, xpath='//div[@class="page-title"]/div').get_text() or \
+            WebElement(web_browser, xpath='//div[@class="page-title"]/h1').get_text()
 
-    assert title.get_text() == expected_title
+    assert title == expected_title
 
 
 @pytest.mark.parametrize("manufacturer", [
@@ -49,7 +49,9 @@ def test_title_of_products(web_browser, manufacturer):
 
 @pytest.mark.parametrize("custom_filter", [
     pytest.param(('', '10000', '15000', [], []), marks=pytest.mark.xfail(reason="there bug with prices. If we choice min price 15000, system will show us products with min price >= 15000")),
+    pytest.param(('', '10000', '-15000', [], []), marks=pytest.mark.xfail(reason="there bug with prices. If we choice min price 15000, system will show us products with min price >= 15000")),
     pytest.param(('', '10000', '10000', [], []), marks=pytest.mark.xfail(reason="there bug with prices. If we choice min price 15000, system will show us products with min price >= 15000")),
+    pytest.param(('', 'AAAAAAA', '10000', [], []), marks=pytest.mark.xfail(reason="there bug with prices. If we choice min price 15000, system will show us products with min price >= 15000")),
     pytest.param(('', '15000', '10000', [], []), marks=pytest.mark.xfail(reason="there bug with prices. If we choice min price 15000, system will show us products with min price >= 15000")),
     ('Apple', '', '', ['Apple'], []),
     ('', '', '', ['Apple', 'BQ'], []),
@@ -71,7 +73,9 @@ def test_title_of_products(web_browser, manufacturer):
     ('', '', '', [], sample(filters, 1)),
     ('', '', '', [], sample(filters, 1)),
 ], ids=["10000 <= price <= 15000",
+        "10000 <= price <= -15000 ????",
         "10000 <= price <= 10000",
+        "AAAAAAA <= price <= 10000 ????",
         "15000 <= price <= 10000 ????",
         "Apple filter",
         "Apple and BQ filter",
@@ -118,3 +122,9 @@ def test_filter_products(web_browser, custom_filter):
                                    xpath='//a[@class="model-short-title no-u"]/span[@class="u"]')
         product_titles_contains_manufacturer = [any(brand in title for brand in manufacturer) for title in products.get_text()]
         assert all(product_titles_contains_manufacturer)
+
+    if my_filters:
+        products = ManyWebElements(web_browser,
+                                   xpath='//a[@class="model-short-title no-u"]/span[@class="u"]')
+
+        assert len(products) > 0

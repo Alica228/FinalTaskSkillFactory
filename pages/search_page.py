@@ -11,7 +11,7 @@ class SearchPage(MainPage):
     def __init__(self, web_driver, category_1, category_2):
         super().__init__(web_driver)
         all_categories_1 = ManyWebElements(self._web_driver,
-                                           xpath='//ul[@class="mainmenu-list ff-roboto"]/li')
+                                           xpath='//ul[@class="mainmenu-list ff-roboto"]/li/a')
         if category_1 not in all_categories_1.get_text():
             msg = 'Category {0} not found'
             raise AttributeError(msg.format(category_1))
@@ -48,8 +48,13 @@ class SearchPage(MainPage):
                 link.click()
 
         if other:
+
+            # Need to scroll down to page
+            WebElement(self._web_driver, xpath='//div[@class="bottom-goods-menu"]').delete()
+
             all_features = ManyWebElements(self._web_driver,
-                                          xpath='//form[@id="form_match"]/div/ul/li/label')
+                                          xpath='//form[@id="form_match"]/div/ul/li')
+
             for feature in other:
 
                 if feature not in all_features.get_text():
@@ -57,6 +62,8 @@ class SearchPage(MainPage):
                     raise AttributeError(msg.format(feature))
 
                 idx = all_features.get_text().index(feature)
+                print(all_features.get_text())
+                print(idx)
                 all_features[idx].click()
 
         time.sleep(1)
