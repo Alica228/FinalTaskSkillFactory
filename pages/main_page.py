@@ -19,7 +19,7 @@ class MainPage(WebPage):
         enter_button_email = WebElement(self._web_driver, xpath='//div[@class="signin-with signin-with-ek d-flex justify-content-center align-items-center"]')
         enter_button_email.click()
 
-        email_and_password_fields = ManyWebElements(self._web_driver, xpath='//div[@class="signin"]/div/input[@class="ek-form-control" and @type="text"]')
+        email_and_password_fields = ManyWebElements(self._web_driver, xpath='//div[@class="signin"]/div/input[@class="ek-form-control"]')
         email_and_password_fields._set_value([email, password])
 
         login_button = WebElement(self._web_driver, xpath='//button[@class="ek-form-btn blue" and @type="submit"]')

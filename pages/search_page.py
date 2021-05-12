@@ -78,6 +78,8 @@ class SearchPage(MainPage):
                                  xpath='//a[@class="show-models"]')
             show_button.click()
 
+    # Хотел сделать ещё проверку закладок и сравнения цен, но эти элементы не видны,
+    # пока не наведёшь на них, поэтому обычный click не срабатывает
     def mark_product(self, locator):
         """ Mark a product. TODO """
         all_products = ManyWebElements(self._web_driver,
