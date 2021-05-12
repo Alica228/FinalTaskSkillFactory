@@ -1,7 +1,9 @@
+#!/usr/bin/python3
+# -*- encoding=utf8 -*-
+
 from pages.search_page import SearchPage
 from pages.elements import WebElement, ManyWebElements
 import pytest
-import time
 from random import sample
 from data import filters
 
@@ -51,7 +53,7 @@ def test_title_of_products(web_browser, manufacturer):
     pytest.param(('', '10000', '15000', [], []), marks=pytest.mark.xfail(reason="there bug with prices. If we choice min price 15000, system will show us products with min price >= 15000")),
     pytest.param(('', '10000', '-15000', [], []), marks=pytest.mark.xfail(reason="there bug with prices. If we choice min price 15000, system will show us products with min price >= 15000")),
     pytest.param(('', '10000', '10000', [], []), marks=pytest.mark.xfail(reason="there bug with prices. If we choice min price 15000, system will show us products with min price >= 15000")),
-    pytest.param(('', 'AAAAAAA', '10000', [], []), marks=pytest.mark.xfail(reason="there bug with prices. If we choice min price 15000, system will show us products with min price >= 15000")),
+    pytest.param(('', 'A'*50, '10000', [], []), marks=pytest.mark.xfail(reason="there bug with prices. If we choice min price 15000, system will show us products with min price >= 15000")),
     pytest.param(('', '15000', '10000', [], []), marks=pytest.mark.xfail(reason="there bug with prices. If we choice min price 15000, system will show us products with min price >= 15000")),
     ('Apple', '', '', ['Apple'], []),
     ('', '', '', ['Apple', 'BQ'], []),
@@ -61,21 +63,11 @@ def test_title_of_products(web_browser, manufacturer):
     pytest.param(('', '5000', '', [], sample(filters, 1)), marks=pytest.mark.xfail(reason="there bug with prices. If we choice min price 15000, system will show us products with min price >= 15000")),
     pytest.param(('', '', '20000', [], sample(filters, 1)),marks=pytest.mark.xfail(reason="there bug with prices. If we choice min price 15000, system will show us products with min price >= 15000")),
     pytest.param(('', '10000', '40000', [], sample(filters, 1)), marks=pytest.mark.xfail(reason="there bug with prices. If we choice min price 15000, system will show us products with min price >= 15000")),
-    ('', '', '', [], sample(filters, 1)),
-    ('', '', '', [], sample(filters, 1)),
-    ('', '', '', [], sample(filters, 1)),
-    ('', '', '', [], sample(filters, 1)),
-    ('', '', '', [], sample(filters, 1)),
-    ('', '', '', [], sample(filters, 1)),
-    ('', '', '', [], sample(filters, 1)),
-    ('', '', '', [], sample(filters, 1)),
-    ('', '', '', [], sample(filters, 1)),
-    ('', '', '', [], sample(filters, 1)),
-    ('', '', '', [], sample(filters, 1)),
+    *[('', '', '', [], sample(filters, 1)) for _ in range(10)],
 ], ids=["10000 <= price <= 15000",
         "10000 <= price <= -15000 ????",
         "10000 <= price <= 10000",
-        "AAAAAAA <= price <= 10000 ????",
+        "A*50 <= price <= 10000 ????",
         "15000 <= price <= 10000 ????",
         "Apple filter",
         "Apple and BQ filter",
@@ -85,17 +77,7 @@ def test_title_of_products(web_browser, manufacturer):
         "Random filters with 5000 <= price",
         "Random filters with price <= 20000",
         "Random filters with 10000 <= price <= 40000",
-        "Another random filters",
-        "Another random filters",
-        "Another random filters",
-        "Another random filters",
-        "Another random filters",
-        "Another random filters",
-        "Another random filters",
-        "Another random filters",
-        "Another random filters",
-        "Another random filters",
-        "Another random filters",
+        *["Another random filters"]*10,
 ])
 def test_filter_products(web_browser, custom_filter):
     """ Test that filter correctly show products. """
@@ -127,4 +109,4 @@ def test_filter_products(web_browser, custom_filter):
         products = ManyWebElements(web_browser,
                                    xpath='//a[@class="model-short-title no-u"]/span[@class="u"]')
 
-        assert len(products) > 0
+        assert products.count() > 0

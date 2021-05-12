@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- encoding=utf8 -*-
+
 from pages.profile_page import ProfilePage
 from pages.elements import WebElement
 import pytest

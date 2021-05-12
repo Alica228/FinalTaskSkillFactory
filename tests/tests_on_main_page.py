@@ -1,7 +1,9 @@
+#!/usr/bin/python3
+# -*- encoding=utf8 -*-
+
 from pages.main_page import MainPage
 from pages.elements import WebElement, ManyWebElements
 from data import valid_email_1, valid_password, valid_email_2, invalid_password
-from data import iduw
 import pytest
 import time
 
@@ -30,7 +32,7 @@ def test_register_user_good_input(web_browser, custom_input):
 
 @pytest.mark.parametrize("custom_input,error", [
     (("SeleniumTest", valid_email_1, invalid_password), 'На этот email уже зарегистрирован аккаунт'),
-    (("SeleniumTest1", valid_email_2, invalid_password), 'На этот email уже зарегистрирован аккаунт'),
+    (("SeleniumTest1", valid_email_2, valid_password), 'На этот email уже зарегистрирован аккаунт'),
     (("<script>alert('0');</script>", valid_email_1, invalid_password), 'Поле "Имя" содержит недопустимые символы'),
 ], ids=["bad params", "bad params","good params with bad nick"])
 def test_register_user_bad_input(web_browser, custom_input, error):

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- encoding=utf8 -*-
-import time
 
+import time
 from pages.main_page import MainPage
 from pages.elements import WebElement, ManyWebElements
 
@@ -35,11 +35,13 @@ class SearchPage(MainPage):
             search_field.send_keys(name)
 
         if price_min:
-            price_min_field = WebElement(self._web_driver, id="minPrice_")
+            price_min_field = WebElement(self._web_driver,
+                                         id="minPrice_")
             price_min_field.send_keys(price_min)
 
         if price_max:
-            price_max_field = WebElement(self._web_driver, id="maxPrice_")
+            price_max_field = WebElement(self._web_driver,
+                                         id="maxPrice_")
             price_max_field.send_keys(price_max)
 
         if manufacturer:
@@ -50,8 +52,9 @@ class SearchPage(MainPage):
 
         if other:
 
-            # Need to scroll down to page
-            WebElement(self._web_driver, xpath='//div[@class="bottom-goods-menu"]').delete()
+            # Need to delete this element from page
+            WebElement(self._web_driver,
+                       xpath='//div[@class="bottom-goods-menu"]').delete()
 
             all_features = ManyWebElements(self._web_driver,
                                           xpath='//form[@id="form_match"]/div/ul/li')
@@ -63,13 +66,17 @@ class SearchPage(MainPage):
                     raise AttributeError(msg.format(feature))
 
                 idx = all_features.get_text().index(feature)
-                print(all_features.get_text())
-                print(idx)
                 all_features[idx].click()
 
         time.sleep(1)
-        show_button = WebElement(self._web_driver, timeout=20, xpath='//a[@class="show-models"]')
-        show_button.click()
+        try:
+            show_button = WebElement(self._web_driver, timeout=20,
+                                 xpath='//a[@class="show-models"]')
+            show_button.click()
+        except:
+            show_button = WebElement(self._web_driver, timeout=20,
+                                 xpath='//a[@class="show-models"]')
+            show_button.click()
 
     def mark_product(self, locator):
         """ Mark a product. TODO """
